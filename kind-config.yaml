@@ -1,0 +1,26 @@
+# kind-config.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      # Map frontend (React app) service
+      - containerPort: 3000
+        hostPort: 3000
+        protocol: TCP
+      # Map gateway-service (API gateway)
+      - containerPort: 8002
+        hostPort: 8002
+        protocol: TCP
+      # Map auth-service
+      - containerPort: 8000
+        hostPort: 8000
+        protocol: TCP
+      # Map catalog-service
+      - containerPort: 8001
+        hostPort: 8001
+        protocol: TCP
+      # Optional: Postgres if you want to access directly
+      - containerPort: 5432
+        hostPort: 5432
+        protocol: TCP

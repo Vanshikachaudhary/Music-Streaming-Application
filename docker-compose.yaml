@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  # Auth Service
+  auth-service:
+    build: ./backend/auth-service
+    container_name: auth-service
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    depends_on:
+      - db
+
+  # Catalog Service
+  catalog-service:
+    build: ./backend/catalog-service
+    container_name: catalog-service
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    depends_on:
+      - db
+
+  # Gateway Service
+  gateway-service:
+    build: ./backend/gateway-service
+    container_name: gateway-service
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+    depends_on:
+      - auth-service
+      - catalog-service
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8002
+    depends_on:
+      - gateway-service
+
+  # Database (Postgres Example)
+  db:
+    image: postgres:14
+    container_name: db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: vanshikaachaudhary/gateway-service
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8002   # internal container port
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: myapp.local
+      paths:
+        - path: /api
+          pathType: Prefix
+  tls: []   # optional for HTTPS
